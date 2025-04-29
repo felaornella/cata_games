@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Taboo</title>
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #f5f5f5; /* Light gray, close to white */
+            margin: 0;
+            height: 100vh;
+        }
+        #btn_skip {
+            font-size: 1.5rem; 
+            padding-inline: 2.5rem; 
+            width: 150px; 
+            margin-bottom: 4rem;
+        }
+        #btn_next{
+            font-size: 1.5rem; 
+            padding-inline: 2rem; 
+            width: 150px;
+        }
+        #btn_reset_mobile{
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        @media (max-width: 991px) {
+            #title_timer {
+                display: none;
+            }
+            #btn_skip {
+                width: 100%;
+                margin-bottom: 1rem; 
+                margin-top: 2rem;
+            }
+            #btn_next{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="btn_reset_mobile" class="btn btn-warning">
+        <i class="bi bi-arrow-clockwise"></i> RESET
+    </button>
+    <div class="row m-0" style="height: 100%; align-items: center;">
+        <div class="col p-0" id="container_pre_play" >
+            <h2 class="text-center mt-4">Welcome to Career Taboo</h2>
+            <div class="container mt-4 mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <p class="card-text">In this game, you will have to guess the word that is being described by your partner. The twist? You cannot use certain words or phrases that are closely related to the word you are trying to guess!</p>
+                                <p class="card-text">For example, if the word is "doctor", you cannot use words like "hospital", "medicine", or "patient".</p>
+                                <p class="card-text">The goal is to guess the word without using the taboo words. It's a fun and challenging game that will test your creativity and communication skills!</p>
+                                <p class="card-text">To play, simply click the button below to start the game. Good luck!</p>
+                                <div class="w-100 text-center mb-3">
+                                    <button id="btn_play" class="btn btn-success" style="font-size: 1.5rem; font-weight: 600;">LET'S PLAY</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col p-0" id="container_play" style="display: none;">
+            <div class="container mt-4 mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <h3 id="title_timer">Time</h3>
+                        
+                        <div id="timer" style="font-size: 3rem; font-weight: bold;">03:00</div>
+
+                        <button id="btn_reset_desktop" class="btn btn-warning mt-4" style="font-weight: bold;"> <i class="bi bi-arrow-clockwise"></i> RESET </button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                        <div class="card shadow-sm" id="taboo_card">
+                            <div class="card-body">
+                                <div class="card-title" style="background-color: blue; padding: 1rem; margin: -1rem; border-radius: .25rem .25rem 0 0;">
+                                    <h2 id="card_word" class="text-center" style="color: white; font-weight: bold;"></h2>
+                                </div>
+                                <div id="hints" class="text-center" style="margin-top: 2.25rem; margin-bottom: 1rem;">
+                                    <p id="hint_1" class="mb-0" style="font-size: 1.5rem; font-weight: 500;"></p>
+                                    <hr>
+                                    <p id="hint_2" class="mb-0" style="font-size: 1.5rem; font-weight: 500;"></p>
+                                    <hr>
+                                    <p id="hint_3" class="mb-0" style="font-size: 1.5rem; font-weight: 500;"></p>
+                                    <hr>
+                                    <p id="hint_4" class="mb-0" style="font-size: 1.5rem; font-weight: 500;"></p>
+                                    <hr>
+                                    <p id="hint_5" class="mb-0" style="font-size: 1.5rem; font-weight: 500;"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4" style="text-align: center;display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <button id="btn_skip" class="btn btn-secondary" >
+                            SKIP
+                        </button>
+                        <button id="btn_next" class="btn btn-primary" >
+                            NEXT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col p-0" id="container_after_play" style="display: none;">
+            <h2 id="after_play_title" class="text-center mt-4">Time's Up!</h2>
+            <div class="container mt-4 mb-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center" style="padding-top: 2rem;"> 
+                                <h3 class="card-title">Youre score is</h3>
+                                <p id="user_points" style="margin: .5rem; font-size: 5rem; font-weight: bold; color: var(--success);">0</p>
+
+                                <h3 id="score_message" class="card-title"></h3>
+
+                                <div class="w-100 text-center mb-3 mt-5">
+                                    <button id="btn_replay" class="btn btn-primary" style="font-size: 1rem; font-weight: 600;">LET'S PLAY AGAIN</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        TIMER_AMOUNT = 180
+        cards=[
+            {"word": "Firefighter", "hints": ["fire", "truck", "rescue", "water", "flames"]},
+            {"word": "Nurse", "hints": ["hospital", "patient", "medicine", "doctor", "sick"]},
+            {"word": "Teacher", "hints": ["school", "students", "class", "learn", "subject"]},
+            {"word": "Police Officer", "hints": ["law", "crime", "arrest", "uniform", "badge"]},
+            {"word": "Volunteer", "hints": ["free", "help", "work", "donate", "time"]},
+            {"word": "Environmental Activist", "hints": ["planet", "recycle", "trees", "pollution", "nature"]},
+            {"word": "Youth Worker", "hints": ["teenager", "help", "community", "support", "activities"]},
+            {"word": "Football Player", "hints": ["ball", "goal", "team", "score", "field"]},
+            {"word": "Writer", "hints": ["book", "write", "story", "novel", "author"]},
+            {"word": "Psychologist", "hints": ["mind", "therapy", "feelings", "talk", "mental"]},
+            {"word": "Bus Driver", "hints": ["drive", "bus", "route", "stop", "passenger"]},
+            {"word": "Actor", "hints": ["movie", "film", "character", "scene", "stage"]},
+            {"word": "Artist", "hints": ["paint", "drawing", "art", "colors", "canvas"]},
+            {"word": "Veterinarian", "hints": ["animal", "pet", "doctor", "sick", "care"]},
+            {"word": "Cook", "hints": ["food", "kitchen", "recipe", "chef", "meal"]},
+            {"word": "Librarian", "hints": ["books", "library", "read", "shelves", "quiet"]},
+            {"word": "Scientist", "hints": ["experiment", "lab", "research", "test", "discovery"]},
+            {"word": "Musician", "hints": ["instrument", "song", "music", "band", "play"]},
+            {"word": "Mechanic", "hints": ["car", "fix", "engine", "tools", "garage"]},
+            {"word": "Accountant", "hints": ["money", "numbers", "taxes", "budget", "finance"]},
+            {"word": "Lawyer", "hints": ["court", "judge", "client", "case", "law"]},
+            {"word": "Content Creator", "hints": ["internet", "social", "media", "followers", "post"]},
+            {"word": "Photographer", "hints": ["camera", "photo", "picture", "capture", "image"]},
+            {"word": "Model", "hints": ["fashion", "runway", "pose", "photo", "clothes"]},
+            {"word": "Dentist", "hints": ["teeth", "cavity", "smile", "brush", "clinic"]},
+            {"word": "Architect", "hints": ["building", "design", "blueprint", "structure", "construction"]},
+            {"word": "Pilot", "hints": ["plane", "fly", "sky", "cockpit", "airport"]},
+            {"word": "Journalist", "hints": ["news", "report", "write", "media", "story"]},
+            {"word": "Entrepreneur", "hints": ["business", "startup", "idea", "innovation", "profit"]},
+            {"word": "Pilot", "hints": ["airplane", "fly", "sky", "travel", "cockpit"]},
+            {"word": "Astronaut", "hints": ["space", "rocket", "moon", "NASA", "exploration"]},
+            {"word": "Farmer", "hints": ["crops", "tractor", "field", "harvest", "animals"]},
+            {"word": "Electrician", "hints": ["wires", "electricity", "circuit", "light", "repair"]}            
+        ]
+        card_index = 0
+        game_in_progress = false
+        let countdown = null;
+        const timerElement = document.getElementById('timer');
+        shuffle_cards(cards);
+        
+        user_points=0
+
+        $("#btn_play").click(function(){
+            $("#container_pre_play").hide()
+            $("#container_play").show()
+            if ($(window).width() <= 991) {
+                $("#btn_reset_desktop").hide();
+                $("#btn_reset_mobile").show();
+            } else {
+                $("#btn_reset_mobile").hide();
+                $("#btn_reset_desktop").show();
+            }
+            game_in_progress=true
+            trigger_timer()
+            load_card()
+        })
+        $("#btn_next").click(function(){
+            user_points+=10
+            if (card_index >= cards.length){
+                game_in_progress=false
+                $("#container_play").hide()
+                $("#user_points").text(user_points)
+                $("#container_after_play").show()
+                $("#btn_reset_mobile").hide();
+                $("#btn_reset_desktop").hide();
+                clearInterval(countdown);
+                if (user_points > 0){
+                    $("#score_message").text("Very good!")
+                }else{
+                    $("#score_message").text("You need to practice more!")
+                }
+                $("#after_play_title").text("Wow!! You finished all the cards!")
+            }else{
+                load_card()
+            }
+        })
+        $("#btn_skip").click(function(){
+            if (card_index >= cards.length){
+                game_in_progress=false
+                $("#container_play").hide()
+                $("#user_points").text(user_points)
+                $("#container_after_play").show()
+                $("#btn_reset_mobile").hide();
+                $("#btn_reset_desktop").hide();
+                clearInterval(countdown);
+                if (user_points > 0){
+                    $("#score_message").text("Very good!")
+                }else{
+                    $("#score_message").text("You need to practice more!")
+                }
+                $("#after_play_title").text("Wow!! You finished all the cards!")
+            }else{
+                load_card()
+            }
+        })
+        $("#btn_replay").click(function(){
+            user_points=0
+            card_index = 0
+            $("#container_after_play").hide()
+            $("#container_pre_play").show()
+        })
+        $("#btn_reset_mobile").click(function() {
+            reset();
+        });
+
+        $("#btn_reset_desktop").click(function() {
+            reset();
+        });
+
+        function reset() {
+            clearInterval(countdown);
+            user_points = 0;
+            card_index = 0;
+            $("#container_play").hide();
+            $("#container_after_play").hide();
+            $("#container_pre_play").show();
+            $("#btn_reset_mobile").hide();
+            $("#btn_reset_desktop").hide();
+            timerElement.textContent = "03:00";
+            shuffle_cards(cards);
+        }
+
+        function trigger_timer(){
+            let timeLeft = TIMER_AMOUNT; // 3 minutes in seconds
+
+            const formatTime = (seconds) => {
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            timerElement.textContent = formatTime(timeLeft);
+
+            countdown = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    if (game_in_progress){
+                        $("#container_play").hide()
+                        $("#user_points").text(user_points)
+                        $("#container_after_play").show()
+                        $("#btn_reset_mobile").hide();
+                        $("#btn_reset_desktop").hide();
+                        if (user_points > 0){
+                            $("#score_message").text("Very good!")
+                        }else{
+                            $("#score_message").text("You need to practice more!")
+                        }
+                    }
+                } else {
+                    timeLeft--;
+                    timerElement.textContent = formatTime(timeLeft);
+                }
+            }, 1000);
+        }
+
+        function shuffle_cards(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function load_card(){
+            card = cards[card_index]
+            if (card_index > 0){
+                spin_card()
+                card_index++
+                setTimeout(()=>{
+                    $("#card_word").text(card.word.toUpperCase())
+                    $("#hint_1").text(card.hints[0].charAt(0).toUpperCase() + card.hints[0].slice(1))
+                    $("#hint_2").text(card.hints[1].charAt(0).toUpperCase() + card.hints[1].slice(1))
+                    $("#hint_3").text(card.hints[2].charAt(0).toUpperCase() + card.hints[2].slice(1))
+                    $("#hint_4").text(card.hints[3].charAt(0).toUpperCase() + card.hints[3].slice(1))
+                    $("#hint_5").text(card.hints[4].charAt(0).toUpperCase() + card.hints[4].slice(1))
+                },500)
+            }else{
+                card_index++
+                $("#card_word").text(card.word.toUpperCase())
+                $("#hint_1").text(card.hints[0].charAt(0).toUpperCase() + card.hints[0].slice(1))
+                $("#hint_2").text(card.hints[1].charAt(0).toUpperCase() + card.hints[1].slice(1))
+                $("#hint_3").text(card.hints[2].charAt(0).toUpperCase() + card.hints[2].slice(1))
+                $("#hint_4").text(card.hints[3].charAt(0).toUpperCase() + card.hints[3].slice(1))
+                $("#hint_5").text(card.hints[4].charAt(0).toUpperCase() + card.hints[4].slice(1))
+            }
+
+        }
+
+        function spin_card() {
+            const card = document.getElementById('taboo_card');
+            $("#btn_skip").attr('disabled', true)
+            $("#btn_next").attr('disabled', true)
+            setTimeout(()=>{
+                $("#btn_skip").attr('disabled', false)
+                $("#btn_next").attr('disabled', false)
+            }, 1500)
+            if (card) {
+                card.style.transition = 'transform 1.5s';
+                card.style.transform = 'rotateY(360deg)';
+                
+                setTimeout(()=>{
+                    card.style.transition = 'transform 0s';
+                    card.style.transform = 'rotateY(0deg)';
+                }, 1500)
+            }
+        }
+
+        window.addEventListener('resize', function() {
+            if (game_in_progress) {
+                if (window.innerWidth <= 991) {
+                    $("#btn_reset_mobile").show();
+                    $("#btn_reset_desktop").hide();
+                } else {
+                    $("#btn_reset_mobile").hide();
+                    $("#btn_reset_desktop").show();
+                }
+            }
+        });
+    </script>
+    <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+</html>
